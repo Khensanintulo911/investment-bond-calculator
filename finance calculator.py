@@ -1,34 +1,7 @@
+# Added PERCENTAGE_CONVERSION constant usage
+PERCENTAGE_CONVERSION = 0.01
 
-"""Display "How may we assist?"
-Display "1. INVESTMENT"
-Display "2. BOND"
-
-Get user input for 'option'
-
-IF option is '1' THEN:
-    Display "You chose INVESTMENT"
-    Get investment amount, interest rate, and investment period
-    Display "Choose A for Simple Interest or B for Compound Interest"
-    Get user choice
-    
-    IF choice is 'A' THEN:
-        Calculate Simple Interest
-        Display Simple Interest and Total Amount
-    
-    ELSE IF choice is 'B' THEN:
-        Calculate Compound Interest
-        Display Compound Interest and Total Amount
-    
-ELSE IF option is '2' THEN:
-    Display "You chose BOND"
-    Get bond value, interest rate, and loan period
-    Calculate monthly repayment, total repayment, and total interest
-    Display repayment details
-
-ELSE:
-    Display "Invalid selection. Choose 1 for Investment or 2 for Bond."""
-
-
+# finance_calculator.py
 print("How may we assist?")
 print("1. INVESTMENT")
 print("2. BOND")
@@ -36,18 +9,40 @@ print("2. BOND")
 # Attain user input
 option = input("Enter 1 or 2: ")
 
+def get_positive_float(prompt):
+    while True:
+        try:
+            value = float(input(prompt))
+            if value < 0:
+                print("Please enter a positive value.")
+            else:
+                return value
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+def get_positive_int(prompt):
+    while True:
+        try:
+            value = int(input(prompt))
+            if value < 0:
+                print("Please enter a positive value.")
+            else:
+                return value
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
+
 if option == '1':
     print("\nYou chose option 1: INVESTMENT.")
-    investment_amount = float(input("Enter amount to be invested: R "))
-    interest_rate = float(input("Enter interest rate (%): ")) / 100
-    investment_period = int(input("Enter the investment period (in years): "))
+    investment_amount = get_positive_float("Enter amount to be invested: R ")
+    interest_rate = get_positive_float("Enter interest rate (%): ") * PERCENTAGE_CONVERSION
+    investment_period = get_positive_int("Enter the investment period (in years): ")
     
     print("\nPlease choose an option below:")
     print("A. S.I - Simple Interest")
     print("B. C.I - Compound Interest")
 
     # Attain 2nd phase user input
-    choice = input("Enter A or B: ")
+    choice = input("Enter A or B: ").strip().upper()
 
     if choice == "A":
         print("\nYou chose choice A: Simple Interest")
@@ -67,15 +62,19 @@ if option == '1':
         print(f"Total Amount: R{total_amount:.2f}")
 
     else:
-         print("selection not supported! Please choose A or B")
+        print("Selection not supported! Please choose A or B")
    
 
 elif option == '2':
     print("\nYou chose option 2: BOND.")
-    current_bond_amount = float(input("bond value: R "))
-    annual_interest_rate = float(input("Enter the annual interest rate (%): ")) / 100
-    loan_period_years = int(input("Enter the loan period (in years): "))
-    
+    try:
+        current_bond_amount = get_positive_float("bond value: R ")
+        annual_interest_rate = get_positive_float("Enter the annual interest rate (%): ") * PERCENTAGE_CONVERSION
+        loan_period_years = get_positive_int("Enter the loan period (in years): ")
+    except ValueError:
+        print("Error: Please enter valid numeric values.")
+        exit()
+
     # Convert the annual interest rate to a monthly interest rate
     monthly_interest_rate = annual_interest_rate / 12
     # Calculate the number of monthly periods (loan months)
